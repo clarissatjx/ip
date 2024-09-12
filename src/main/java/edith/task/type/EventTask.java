@@ -1,4 +1,4 @@
-package edith.task;
+package edith.task.type;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
-import edith.exception.MissingEventDurationException;
-import edith.exception.MissingTaskNameException;
+import edith.task.exception.MissingEventDurationException;
+import edith.task.exception.MissingTaskNameException;
 
 public class ParserTest {
 

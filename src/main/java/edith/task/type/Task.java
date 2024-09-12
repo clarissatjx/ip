@@ -1,4 +1,4 @@
-package edith.task;
+package edith.task.type;
 
 /**
  * Abstract class Task. This abstract class provides methods to check and uncheck the task, get the task name and

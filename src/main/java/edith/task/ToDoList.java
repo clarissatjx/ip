@@ -1,9 +1,10 @@
-package edith;
+package edith.task;
 
 import java.util.ArrayList;
 
-import edith.exception.InvalidTaskNumberException;
-import edith.task.Task;
+import edith.Storage;
+import edith.task.exception.InvalidTaskNumberException;
+import edith.task.type.Task;
 
 /**
  * This class stores tasks as an ArrayList.

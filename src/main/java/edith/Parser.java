@@ -4,11 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import edith.exception.MissingDeadlineException;
-import edith.exception.MissingEventDurationException;
-import edith.exception.MissingKeywordException;
-import edith.exception.MissingTaskNameException;
-import edith.exception.MissingTaskNumberException;
+import edith.expense.exception.*;
+import edith.task.exception.MissingDeadlineException;
+import edith.task.exception.MissingEventDurationException;
+import edith.task.exception.MissingKeywordException;
+import edith.task.exception.MissingTaskNameException;
+import edith.task.exception.MissingTaskNumberException;
 
 /**
  * This class handles all parsing of Strings into appropriate outputs.
@@ -18,6 +19,7 @@ public class Parser {
      * Class for commands.
      */
     public enum Command {
+        COMMAND,
         LIST,
         MARK,
         UNMARK,
@@ -27,17 +29,31 @@ public class Parser {
         DELETE,
         FIND,
         BYE,
+        EXPENSE,
+        INVALID
+    }
+
+    /**
+     * Class for expense commands.
+     */
+    enum ExpenseCommand {
+        ADD,
+        DELETE,
+        TAG,
+        OVERVIEW,
+        LIST,
         INVALID
     }
 
     /**
      * Returns command to be executed.
      * @param userInput User input to be deciphered.
-     * @return Command as a string.
+     * @return Command.
      */
     public static Command getCommand(String userInput) {
         List<String> userInputs = Arrays.asList(userInput.split(" "));
         return switch (userInputs.get(0)) {
+        case "command" -> Command.COMMAND;
         case "mark" -> Command.MARK;
         case "unmark" -> Command.UNMARK;
         case "list" -> Command.LIST;
@@ -47,8 +63,117 @@ public class Parser {
         case "delete" -> Command.DELETE;
         case "find" -> Command.FIND;
         case "bye" -> Command.BYE;
+        case "expense" -> Command.EXPENSE;
         default -> Command.INVALID;
         };
+    }
+
+    /**
+     * Returns expense command to be executed
+     * @param userInput User input to be deciphered.
+     * @return ExpenseCommand.
+     */
+    public static ExpenseCommand getExpenseCommand(String userInput) throws MissingExpenseCommandException {
+        try {
+            List<String> userInputs = Arrays.asList(userInput.split(" "));
+            return switch (userInputs.get(1)) {
+            case "add" -> ExpenseCommand.ADD;
+            case "delete" -> ExpenseCommand.DELETE;
+            case "tag" -> ExpenseCommand.TAG;
+            case "list" -> ExpenseCommand.LIST;
+            case "overview" -> ExpenseCommand.OVERVIEW;
+            default -> ExpenseCommand.INVALID;
+            };
+        } catch (IndexOutOfBoundsException e) {
+            throw new MissingExpenseCommandException();
+        }
+    }
+
+    /**
+     * Returns expense details - name and expenditure.
+     * @param userInput User input.
+     * @return Details of expense.
+     */
+    public static String getExpenseDetails(String userInput) throws MissingExpenseDetailsException {
+        try {
+            String[] parts = userInput.split(" ");
+            StringBuilder details = new StringBuilder();
+            for (int i = 2; i < parts.length; i++) {
+                details.append(parts[i]);
+                if (i < parts.length - 1) {
+                    details.append(" ");
+                }
+            }
+            return details.toString();
+        } catch (Exception e) {
+            throw new MissingExpenseDetailsException();
+        }
+    }
+
+    /**
+     * Returns name of expense.
+     * @param expenseDetails Expense details including name and expenditure.
+     * @return Name of expenditure.
+     */
+    public static String getExpenseName(String expenseDetails) {
+        String[] parts = expenseDetails.split(" ");
+        StringBuilder name = new StringBuilder();
+        for (int i = 0; i < parts.length - 1; i++) {
+            name.append(parts[i]);
+            if (i < parts.length - 2) {
+                name.append(" ");
+            }
+        }
+        return name.toString();
+    }
+
+    /**
+     * Returns expense's amount.
+     * @param expenseDetails Expense details including name and expenditure.
+     * @return Expense's amount.
+     */
+    public static double getExpenseAmount(String expenseDetails) throws MissingExpenseAmountException {
+        try {
+            String[] parts = expenseDetails.split(" ");
+            double amount = Double.parseDouble(parts[parts.length - 1]);
+            return amount;
+        } catch (Exception e) {
+            throw new MissingExpenseAmountException();
+        }
+    }
+
+    /**
+     * Returns expense index number.
+     * @param userInput User input.
+     * @return Expense index number.
+     */
+    public static int getExpenseNumber(String userInput) throws MissingExpenseIndexException {
+        try {
+            String[] parts = userInput.split(" ");
+            return Integer.parseInt(parts[2]);
+        } catch (IndexOutOfBoundsException e) {
+            throw new MissingExpenseIndexException();
+        }
+    }
+
+    /**
+     * Returns tag to be tagged to an expense.
+     * @param userInput User input.
+     * @return Tag for expense.
+     */
+    public static String getExpenseTag(String userInput) throws MissingExpenseTagException {
+        String[] parts = userInput.split(" ");
+        StringBuilder tag = new StringBuilder();
+        for (int i = 3; i < parts.length; i++) {
+            tag.append(parts[i]);
+            if (i < parts.length - 1) {
+                tag.append(" ");
+            }
+        }
+        if (tag.toString().isEmpty()) {
+            throw new MissingExpenseTagException();
+        }
+        return tag.toString();
     }
 
     /**

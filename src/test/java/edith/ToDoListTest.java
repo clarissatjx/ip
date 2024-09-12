@@ -3,10 +3,11 @@ package edith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import edith.task.ToDoList;
 import org.junit.jupiter.api.Test;
 
-import edith.exception.InvalidTaskNumberException;
-import edith.task.ToDoTask;
+import edith.task.exception.InvalidTaskNumberException;
+import edith.task.type.ToDoTask;
 
 public class ToDoListTest {
 

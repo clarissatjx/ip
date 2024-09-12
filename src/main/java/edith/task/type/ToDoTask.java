@@ -1,4 +1,4 @@
-package edith.task;
+package edith.task.type;
 
 /**
  * This class extends the Task class. The DeadlineTask inherits the following fields: String taskName,
